@@ -57,7 +57,7 @@ const ProgramShowcase = () => {
       id: 4,
       title: "Rejuvenation Of Mind & Body",
       tagline: "Learn to win over stress and anxiety and reclaim your happiness",
-      image: "/assets/reju.svg", // Replaced with Unsplash for preview
+      image: "/assets/Reju.svg", // Replaced with Unsplash for preview
       duration: "8 Weeks",
       level: "Intermediate",
       category: "Fitness",
