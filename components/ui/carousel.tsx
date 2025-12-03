@@ -68,7 +68,7 @@ const ProgramShowcase = () => {
   ];
 
   return (
-    <div className="font-sans text-stone-800">
+    <div id="programs" className="font-sans text-stone-800">
       
       {/* SECTION C: PROGRAM SHOWCASE */}
       <section className="py-20 bg-stone-50">
