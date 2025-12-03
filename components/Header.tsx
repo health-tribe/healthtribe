@@ -260,7 +260,7 @@ const Header: React.FC = () => {
                     </div>
 
                     <div className="hidden lg:flex items-center gap-4">
-                       <Link href="#programs">
+                       <Link href="/#programs">
                         <Button variant="primary" size="default">Book Now</Button>
                </Link>     </div>
 
