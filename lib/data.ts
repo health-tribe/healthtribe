@@ -247,7 +247,7 @@ export const ALL_COURSE_DATA = {
     title: 'Cellular Rejuvenation Protocol',
     subtitle: 'Biohack Your Sleep, Stress, and Longevity in 8 Weeks',
     tagline: 'Deep-dive into hormonal balance and recovery for peak performance',
-    heroImage: 'Reju.svg',
+    heroImage: 'reju.svg',
 
     painPoints: [
       'Constant stress and feeling burnt out',
