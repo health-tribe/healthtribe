@@ -19,7 +19,7 @@ const ProgramShowcase = () => {
   const programs = [
     {
       id: 1,
-      title: "Fondation Reset Program",
+      title: "Foundation Reset Program",
       tagline: "Heal your digestion and boost natural energy.",
       image: "/assets/FOUNDATION.svg", // Replaced with Unsplash for preview
       duration: "3 Weeks",
