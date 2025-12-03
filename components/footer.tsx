@@ -38,14 +38,14 @@ export default function App() {
     return (
         // Main footer container, using the requested hex color #14AE5C for the background
         <footer
-            id="footer"
+            
             className="text-black font-sans m-0 p-0"
             style={{ backgroundColor: '#F5F5F5' }}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
                 {/* TOP SECTION: Links and Newsletter */}
-                <div className="flex flex-col md:flex-row md:justify-between md:items-start space-y-8 md:space-y-0">
+                <div id="footer" className="flex flex-col md:flex-row md:justify-between md:items-start space-y-8 md:space-y-0">
 
                     {/* 1. Navigation Links */}
                     <div className="flex flex-col space-y-2 md:space-y-0 md:flex-row md:space-x-8 text-lg font-light">
