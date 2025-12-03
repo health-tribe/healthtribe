@@ -1,0 +1,530 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+
+}
+
+// ==========================================
+// DOMAIN 1: USERS & AUTH (Better Auth Integrated)
+// ==========================================
+
+enum UserRole {
+  STUDENT
+  ADMIN
+  SUPPORT
+}
+
+model User {
+  id            String    @id @default(cuid())
+  uid           String    @unique @default(cuid()) // Custom User ID
+  name          String    // Required by Better Auth
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?   // Avatar URL
+  
+  // Custom User Fields
+  firstName     String?
+  lastName      String?
+  phone         String?
+  role          UserRole  @default(STUDENT)
+  isActive      Boolean   @default(true) // Soft Delete
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Auth Relations
+  sessions      Session[]
+  accounts      Account[]
+  
+  // Domain Relations
+  enrollments          Enrollment[]
+  carts                Cart?
+  orders               Order[]
+  discountAllocations  UserDiscountAllocation[]
+
+  @@index([uid])
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  sid       String   @unique @default(cuid()) // Custom Session ID
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([sid])
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+model Account {
+  id               String    @id @default(cuid())
+  aid              String    @unique @default(cuid()) // Custom Account ID
+  userId           String
+  accountId        String    // Provider's unique ID for user
+  providerId       String    // "credential", "google", "github"
+  accessToken      String?   @db.Text // Text type for long tokens
+  refreshToken     String?   @db.Text
+  expiresAt        DateTime?
+  password         String?   // Argon2/bcrypt hash
+  
+  // Security Audits
+  lastLoginAt      DateTime?
+  passwordChangedAt DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, providerId])
+  @@index([aid])
+  @@index([userId])
+  @@index([providerId])
+  @@map("accounts")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  vid        String   @unique @default(cuid()) // Custom Verification ID
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  @@index([vid])
+  @@index([identifier])
+  @@index([expiresAt])
+  @@map("verifications")
+}
+
+// ==========================================
+// DOMAIN 2: INVENTORY & PRICING
+// ==========================================
+
+model Course {
+  id          String   @id @default(cuid())
+  cid         String   @unique @default(cuid()) // Custom Course ID
+  title       String
+  slug        String   @unique
+  description String?  @db.Text
+  thumbnail   String?
+  basePrice   Int      // Stored in Cents/Paise (e.g., 1000 = ₹10.00)
+  isPublished Boolean  @default(false)
+  isActive    Boolean  @default(true) // Soft Delete
+  metadata    Json?    // Duration, Difficulty, InstructorID
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  priceHistory   CoursePrice[]
+  cartItems      CartItem[]
+  enrollments    Enrollment[]
+  lineItems      OrderLineItem[]
+
+  @@index([cid])
+  @@index([slug])
+  @@index([isPublished])
+  @@index([createdAt])
+  @@map("courses")
+}
+
+model CoursePrice {
+  id          String    @id @default(cuid())
+  cpid        String    @unique @default(cuid()) // Custom Course Price ID
+  courseId    String
+  price       Int       // Cents/Paise
+  currency    String    @default("INR")
+  activeFrom  DateTime  @default(now())
+  activeUntil DateTime? // Null means currently active
+  
+  createdAt   DateTime  @default(now())
+
+  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([cpid])
+  @@index([courseId])
+  @@index([activeFrom])
+  @@index([activeUntil])
+  @@map("course_prices")
+}
+
+// ==========================================
+// DOMAIN 3: DISCOUNT ENGINE
+// ==========================================
+
+enum DiscountCategory {
+  D1_BASE
+  D2_USER_EXCLUSIVE
+  D3_SEASONAL
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FLAT_AMOUNT
+}
+
+model Discount {
+  id              String           @id @default(cuid())
+  did             String           @unique @default(cuid()) // Custom Discount ID
+  code            String?          @unique // Null for automatic, "DIWALI25" for manual
+  name            String           // Display name
+  description     String?
+  category        DiscountCategory
+  type            DiscountType
+  value           Int              // Percentage (10) or Amount in cents (50000)
+  minOrderAmount  Int?             // Cents
+  maxDiscountCap  Int?             // Cents
+  maxUsageCount   Int?             // Total usage limit
+  maxUsagePerUser Int?             @default(1)
+  startsAt        DateTime
+  expiresAt       DateTime
+  isStackable     Boolean          @default(false)
+  isActive        Boolean          @default(true)
+  
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  allocations     UserDiscountAllocation[]
+  usedInOrders    OrderDiscountUsage[]
+
+  @@index([did])
+  @@index([code])
+  @@index([category])
+  @@index([startsAt])
+  @@index([expiresAt])
+  @@index([isActive])
+  @@map("discounts")
+}
+
+model UserDiscountAllocation {
+  id         String    @id @default(cuid())
+  udaid      String    @unique @default(cuid()) // Custom User Discount Allocation ID
+  userId     String
+  discountId String
+  isRedeemed Boolean   @default(false)
+  redeemedAt DateTime?
+  assignedAt DateTime  @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  discount   Discount @relation(fields: [discountId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, discountId])
+  @@index([udaid])
+  @@index([userId])
+  @@index([discountId])
+  @@index([isRedeemed])
+  @@map("user_discount_allocations")
+}
+
+// ==========================================
+// DOMAIN 4: PRE-PURCHASE (Cart)
+// ==========================================
+
+model Cart {
+  id             String   @id @default(cuid())
+  caid           String   @unique @default(cuid()) // Custom Cart ID
+  userId         String   @unique // One cart per user
+  lastActivityAt DateTime @default(now())
+  createdAt      DateTime @default(now())
+  
+  items          CartItem[]
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([caid])
+  @@index([userId])
+  @@map("carts")
+}
+
+model CartItem {
+  id       String   @id @default(cuid())
+  ciid     String   @unique @default(cuid()) // Custom Cart Item ID
+  cartId   String
+  courseId String
+  addedAt  DateTime @default(now())
+
+  cart     Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, courseId])
+  @@index([ciid])
+  @@index([cartId])
+  @@index([courseId])
+  @@map("cart_items")
+}
+
+// ==========================================
+// DOMAIN 5: TRANSACTIONS (Orders)
+// ==========================================
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+model Order {
+  id                  String      @id @default(cuid())
+  oid                 String      @unique @default(cuid()) // Custom Order ID
+  orderNumber         String      @unique // Human-readable: ORD-2025-001
+  userId              String
+  status              OrderStatus @default(PENDING)
+  currency            String      @default("INR")
+  
+  // Financials (All in Cents/Paise)
+  subtotalAmount      Int
+  totalDiscountAmount Int         @default(0)
+  taxableAmount       Int
+  taxAmount           Int
+  finalPayableAmount  Int
+
+  // Metadata
+  customerEmail       String
+  customerName        String
+  billingAddress      Json?
+  notes               String?
+
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+
+  user                User        @relation(fields: [userId], references: [id])
+  lineItems           OrderLineItem[]
+  discountsUsed       OrderDiscountUsage[]
+  transactions        Transaction[]
+  invoice             Invoice?
+
+  @@index([oid])
+  @@index([orderNumber])
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderLineItem {
+  id                  String   @id @default(cuid())
+  olid                String   @unique @default(cuid()) // Custom Order Line Item ID
+  orderId             String
+  courseId            String
+  courseTitleSnapshot String
+  unitPriceSnapshot   Int      // Price at moment of purchase (Cents)
+  quantity            Int      @default(1)
+  
+  createdAt           DateTime @default(now())
+
+  order               Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  course              Course   @relation(fields: [courseId], references: [id])
+
+  @@index([olid])
+  @@index([orderId])
+  @@index([courseId])
+  @@map("order_line_items")
+}
+
+model OrderDiscountUsage {
+  id               String           @id @default(cuid())
+  oduid            String           @unique @default(cuid()) // Custom Order Discount Usage ID
+  orderId          String
+  discountId       String
+  discountCode     String?          // Snapshot of code at time of use
+  discountCategory DiscountCategory
+  amountDeducted   Int              // Cents
+  
+  createdAt        DateTime         @default(now())
+
+  order            Order            @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  discount         Discount         @relation(fields: [discountId], references: [id])
+
+  @@index([oduid])
+  @@index([orderId])
+  @@index([discountId])
+  @@map("order_discount_usage")
+}
+
+enum TxStatus {
+  INITIATED
+  PENDING
+  SUCCESS
+  FAILURE
+  TIMEOUT
+}
+
+model Transaction {
+  id                String   @id @default(cuid())
+  txid              String   @unique @default(cuid()) // Custom Transaction ID
+  orderId           String
+  razorpayOrderId   String   @unique
+  razorpayPaymentId String?  @unique
+  razorpaySignature String?
+  amount            Int      // Cents
+  currency          String   @default("INR")
+  status            TxStatus
+  errorCode         String?
+  errorLog          String?  @db.Text
+  metadata          Json?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  order             Order    @relation(fields: [orderId], references: [id])
+
+  @@index([txid])
+  @@index([orderId])
+  @@index([razorpayOrderId])
+  @@index([razorpayPaymentId])
+  @@index([status])
+  @@map("transactions")
+}
+
+// ==========================================
+// DOMAIN 6: FISCAL COMPLIANCE
+// ==========================================
+
+model TaxRate {
+  id             String    @id @default(cuid())
+  tid            String    @unique @default(cuid()) // Custom Tax ID
+  taxName        String    // "GST", "CGST", "SGST"
+  taxCode        String    @unique // "GST18", "CGST9"
+  percentage     Float     // 18.0
+  description    String?
+  effectiveFrom  DateTime
+  effectiveUntil DateTime?
+  isActive       Boolean   @default(true)
+  
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([tid])
+  @@index([taxCode])
+  @@index([effectiveFrom])
+  @@index([effectiveUntil])
+  @@index([isActive])
+  @@map("tax_rates")
+}
+
+model Invoice {
+  id                      String   @id @default(cuid())
+  iid                     String   @unique @default(cuid()) // Custom Invoice ID
+  orderId                 String   @unique
+  invoiceNumber           String   @unique // "INV-2025-001"
+  invoiceDate             DateTime @default(now())
+  dueDate                 DateTime?
+  customerDetailsSnapshot Json     // Address/Name at time of billing
+  gstin                   String?
+  pan                     String?
+  
+  // Financial Summary
+  subtotal                Int
+  taxAmount               Int
+  totalAmount             Int
+  finalAmount             Int      // Cents
+  
+  pdfPath                 String?
+  pdfUrl                  String?
+  isSent                  Boolean  @default(false)
+  sentAt                  DateTime?
+  
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  order                   Order    @relation(fields: [orderId], references: [id])
+
+  @@index([iid])
+  @@index([invoiceNumber])
+  @@index([orderId])
+  @@index([invoiceDate])
+  @@map("invoices")
+}
+
+// ==========================================
+// DOMAIN 7: FULFILLMENT
+// ==========================================
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  SUSPENDED
+  EXPIRED
+}
+
+model Enrollment {
+  id                 String           @id @default(cuid())
+  eid                String           @unique @default(cuid()) // Custom Enrollment ID
+  userId             String
+  courseId           String
+  orderId            String?          // Optional: free access/manual grant
+  status             EnrollmentStatus @default(ACTIVE)
+  enrolledAt         DateTime         @default(now())
+  startedAt          DateTime?        // When user first accessed course
+  completedAt        DateTime?
+  expiresAt          DateTime?        // For time-limited access
+  progressPercentage Int              @default(0)
+  isCompleted        Boolean          @default(false)
+  lastAccessedAt     DateTime?
+  
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  user               User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course             Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId]) // Prevent duplicate enrollments
+  @@index([eid])
+  @@index([userId])
+  @@index([courseId])
+  @@index([status])
+  @@index([enrolledAt])
+  @@map("enrollments")
+}
+
+// ==========================================
+// DOMAIN 8: AUDIT & LOGGING (Optional Enhancement)
+// ==========================================
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  PURCHASE
+  REFUND
+}
+
+model AuditLog {
+  id         String      @id @default(cuid())
+  alid       String      @unique @default(cuid()) // Custom Audit Log ID
+  userId     String?
+  entityType String      // "Order", "User", "Course"
+  entityId   String      // The ID of the affected entity
+  action     AuditAction
+  changes    Json?       // Before/After snapshots
+  ipAddress  String?
+  userAgent  String?
+  metadata   Json?
+  
+  createdAt  DateTime    @default(now())
+
+  @@index([alid])
+  @@index([userId])
+  @@index([entityType])
+  @@index([entityId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
