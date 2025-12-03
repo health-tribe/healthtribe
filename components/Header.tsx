@@ -1,21 +1,47 @@
-'use client'
-
 import React, { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import Image from 'next/image'
-import Link from 'next/link'
+// Removed imports for 'next/image' and 'next/link'
 
-// --- Types ---
-import type { NavItemProps, ButtonProps, MobileMenuProps } from '@/lib/types';
-
+// --- Internal Types Definitions for self-containment ---
 const NAV_ITEMS = ['Home', 'Explore', 'Services', 'About Us'] as const
 type NavItemType = typeof NAV_ITEMS[number]
 
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'outline' | 'ghost';
+  size?: 'sm' | 'default' | 'lg';
+  className?: string;
+  customColor?: string;
+  customTextColor?: 'text-white' | 'text-dark';
+}
+
+interface NavItemProps {
+  item: NavItemType;
+  isActive: boolean;
+  onSelect: (item: NavItemType) => void;
+  onClose?: () => void;
+  href: string; // Added href property
+}
+
+interface MobileMenuProps {
+  isOpen: boolean;
+  onClose: () => void;
+  activeNavItem: NavItemType;
+  onNavSelect: (item: string) => void;
+}
+// --------------------------------------------------------
+
+const NAV_PATHS: Record<NavItemType, string> = {
+  Home: '/',
+  Explore: '#', // Link is handled by dropdown, but required for type safety
+  Services: '/#programs', // Path set to '/'
+  'About Us': '/#faq', // Path set to '/'
+};
+
 const EXPLORE_OPTIONS = [
-  { label: 'Programs', href: '#programs' },
-  { label: 'Workshops', href: '#workshops' },
-  { label: 'Resources', href: '#resources' },
-  { label: 'Community', href: '#community' }
+  { label: 'Programs', href: '/#programs' },
+  { label: 'Workshops', href: '/' },
+  { label: 'Resources', href: '/#faq' },
+  { label: 'Community', href: '/#footer' }
 ]
 
 // --- Utility Components ---
@@ -69,8 +95,10 @@ const Button: React.FC<ButtonProps> = ({
   )
 }
 
-const NavItem: React.FC<NavItemProps> = ({ item, isActive, onSelect, onClose }) => (
-  <button
+// Fixed: Changed from a Next.js Link to a standard anchor tag <a>
+const NavItem: React.FC<NavItemProps> = ({ item, isActive, onSelect, onClose, href }) => (
+  <a
+    href={href}
     onClick={() => { onSelect(item); onClose?.(); }}
     className={`relative py-1 px-2 font-medium transition-colors ${isActive ? 'text-black' : 'text-gray-500 hover:text-gray-900'}`}
   >
@@ -82,7 +110,7 @@ const NavItem: React.FC<NavItemProps> = ({ item, isActive, onSelect, onClose }) 
         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
       />
     )}
-  </button>
+  </a>
 )
 
 const ExploreDropdown: React.FC<{ isActive: boolean; onClose: () => void }> = ({ isActive, onClose }) => {
@@ -94,7 +122,9 @@ const ExploreDropdown: React.FC<{ isActive: boolean; onClose: () => void }> = ({
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      <button
+      {/* Fixed: Changed from Link to standard anchor tag <a> */}
+      <a
+        href={NAV_PATHS['Explore']}
         className={`flex items-center gap-1 py-1 px-2 font-medium transition-colors ${isActive || isOpen ? 'text-black' : 'text-gray-500 hover:text-gray-900'}`}
         aria-expanded={isOpen}
       >
@@ -112,7 +142,7 @@ const ExploreDropdown: React.FC<{ isActive: boolean; onClose: () => void }> = ({
             transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
           />
         )}
-      </button>
+      </a>
 
       <AnimatePresence>
         {isOpen && (
@@ -124,14 +154,15 @@ const ExploreDropdown: React.FC<{ isActive: boolean; onClose: () => void }> = ({
             className="absolute top-full left-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50"
           >
             {EXPLORE_OPTIONS.map((opt) => (
-              <Link
+              // Fixed: Changed from Link to standard anchor tag <a>
+              <a
                 key={opt.label}
                 href={opt.href}
                 onClick={() => { setIsOpen(false); onClose(); }}
                 className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#10B981] transition-colors"
               >
                 {opt.label}
-              </Link>
+              </a>
             ))}
           </motion.div>
         )}
@@ -188,32 +219,38 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, activeNavItem,
                           className="overflow-hidden pl-4 flex flex-col gap-3 mt-3 border-l-2 border-gray-100"
                         >
                           {EXPLORE_OPTIONS.map((opt) => (
-                            <Link
+                            // Fixed: Changed from Link to standard anchor tag <a>
+                            <a
                               key={opt.label}
                               href={opt.href}
                               onClick={onClose}
                               className="text-base text-gray-600 py-1"
                             >
                               {opt.label}
-                            </Link>
+                            </a>
                           ))}
                         </motion.div>
                       )}
                     </AnimatePresence>
                   </div>
                 ) : (
-                  <button
+                  // Fixed: Changed from Link to standard anchor tag <a>
+                  <a
+                    href={NAV_PATHS[item]}
                     onClick={() => { onNavSelect(item); onClose(); }}
                     className={`text-left w-full ${activeNavItem === item ? 'text-[#10B981]' : 'text-gray-800'}`}
                   >
                     {item}
-                  </button>
+                  </a>
                 )}
               </div>
             ))}
 
             <div className="h-px bg-gray-100 w-full my-4" />
-            <Button size="lg" className="w-full">Book Now</Button>
+            {/* Fixed: Changed from Link to standard anchor tag <a> */}
+            <a href="/#programs">
+              <Button size="lg" className="w-full">Book Now</Button>
+            </a>
           </div>
         </motion.div>
       )}
@@ -222,23 +259,28 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, activeNavItem,
 }
 
 const Header: React.FC = () => {
+    // Correctly initialize activeNavItem as a value from NavItemType
     const [activeNavItem, setActiveNavItem] = useState<NavItemType>('Home');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const handleNavSelect = useCallback((item: string) => {
-        setActiveNavItem(item as NavItemType);
+        // Only update active item if it's not the Explore dropdown (which handles its own state)
+        if (item !== 'Explore') {
+             setActiveNavItem(item as NavItemType);
+        }
     }, []);
 
     return (
         <>
-            <header className="fixed top-0 inset-x-0 z-40 bg-white/90 backdrop-blur-md border-b  border-gray-100">
+            <header className="fixed top-0 inset-x-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-100">
                 <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
-                    <Link href="/" className="flex items-center gap-2 group">
-                        <Image src="/assets/images/design/logo.svg" alt="Logo" width={50} height={50} />
+                    {/* Fixed: Changed from Link to standard anchor tag <a> and Image to <img> */}
+                    <a href="/" className="flex items-center gap-2 group">
+                        <img src="/assets/images/design/logo.svg" alt="Logo" width={50} height={50} className="w-[50px] h-[50px]" />
                         <span className="font-bold text-lg sm:text-xl tracking-tight group-hover:text-[#08e199] transition-colors" style={{ color: '#10B981' }}>
                             The Health Tribe
                         </span>
-                    </Link>
+                    </a>
 
                     <div className="hidden lg:flex items-center gap-8">
                         {NAV_ITEMS.map((item) => (
@@ -254,15 +296,18 @@ const Header: React.FC = () => {
                                     item={item}
                                     isActive={activeNavItem === item}
                                     onSelect={handleNavSelect}
+                                    href={NAV_PATHS[item]}
                                 />
                             )
                         ))}
                     </div>
 
                     <div className="hidden lg:flex items-center gap-4">
-                       <Link href="/#programs">
+                        {/* Fixed: Changed from Link to standard anchor tag <a> */}
+                        <a href="/#programs">
                         <Button variant="primary" size="default">Book Now</Button>
-               </Link>     </div>
+                        </a>
+                    </div>
 
                     <button
                         className="lg:hidden p-2 text-gray-600"
