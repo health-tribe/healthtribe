@@ -38,6 +38,7 @@ export default function App() {
     return (
         // Main footer container, using the requested hex color #14AE5C for the background
         <footer
+            id="footer"
             className="text-black font-sans m-0 p-0"
             style={{ backgroundColor: '#F5F5F5' }}
         >
