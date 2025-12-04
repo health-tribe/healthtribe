@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 // Removed imports for 'next/image' and 'next/link'

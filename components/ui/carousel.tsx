@@ -20,48 +20,48 @@ const ProgramShowcase = () => {
     {
       id: 1,
       title: "Foundation Reset Program",
-      tagline: "Heal your digestion and boost natural energy.",
+      tagline: "A complete amalgamation of fitness, nutrition, detox , awareness and habits building",
       image: "/assets/FOUNDATION.svg", // Replaced with Unsplash for preview
-      duration: "3 Weeks",
-      level: "Beginner",
+      duration: "3, 6 or 12 months",
+      level: "Multi dimensional fitness",
       category: "Nutrition",
-      badge: "Best Seller",
+      badge: "Transform",
       price: "",
       url: "/programs/foundation-reset"
     },
     {
       id: 2,
       title: "Comprehensive Health Reboot",
-      tagline: "Focused on lifestyle diseases along with expert doctors and coaches",
+      tagline: "A comprehensive program targeting holistic wellness and complete system repair",
       image: "/assets/Comp.svg", // Replaced with Unsplash for preview
-      duration: "4 Weeks",
-      level: "All Levels",
+      duration: "6 months",
+      level: "Metabolic Reset",
       category: "Movement",
-      badge: "Trending",
+      badge: "Revive",
      price: "",
       url: "/programs/reboot"
     },
     {
       id: 3,
       title: "Move Better: Lifestyle & Mobility",
-      tagline: "Is your sedentary work life taking a toll on your neck, back and joints?",
+      tagline: "Program designed for professionals who spend extended hours at their desks and are now paying the price through back pain, stiffness, poor posture, low energy, and rising stress",
       image: "/assets/MoveB.svg", // Replaced with Unsplash for preview
-      duration: "8 Weeks",
-      level: "Intermediate",
+      duration: "2 weeks",
+      level: "Posture relief",
       category: "Fitness",
-      badge: null,
+      badge: "Repair",
       price: "",
        url: "/programs/move-better"
     },
      {
       id: 4,
-      title: "Rejuvenation Of Mind & Body",
-      tagline: "Learn to win over stress and anxiety and reclaim your happiness",
+      title: "Stress Management",
+      tagline: "The 6-Week Stress Reset is your path to a calmer body, a clearer mind, and a healthier, more balanced you — even in a demanding world.",
       image: "/assets/Reju.svg", // Replaced with Unsplash for preview
-      duration: "8 Weeks",
-      level: "Intermediate",
+      duration: "6 weeks",
+      level: "Rewires your stress",
       category: "Fitness",
-      badge: null,
+      badge: "Stress Management",
        price: "",
          url: "/programs/rejuvenation"
     }

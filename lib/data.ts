@@ -106,8 +106,8 @@ export const ALL_COURSE_DATA = {
   'reboot': {
     id: 'reboot',
     title: 'Comprehensive Health Reboot',
-    subtitle: 'Transform Your Body & Mind in 12 Weeks',
-    tagline: 'A science-backed program designed for busy professionals who want lasting results',
+    subtitle: 'Metabolic Reset',
+    tagline: 'A comprehensive program targeting holistic wellness and complete system repair',
     heroImage: 'comprehensive.svg',
 
     painPoints: [
@@ -130,7 +130,7 @@ export const ALL_COURSE_DATA = {
       {
         week: 'Week 1-2',
         title: 'Foundation & Assessment',
-        description: 'Comprehensive health evaluation, goal setting, and baseline measurements',
+        description: 'A comprehensive program targeting holistic wellness and complete system repair',
         lessons: [
           'Complete metabolic assessment',
           'Lifestyle and habit analysis',
@@ -212,21 +212,26 @@ export const ALL_COURSE_DATA = {
     pricing: {
       options: [
         {
-          id: 'monthly',
-          label: 'Monthly Plan',
-          price: 4999,
-          period: 'month',
-          commitment: '1 month',
-          isRecommended: false
+          id: 'early-bird',
+          label: 'Before Dec 20, 2025',
+          price: 62490,
+          originalPrice: 124990,
+          discount: '50% OFF',
+          period: '6 months',
+          commitment: '6 months',
+          savings: 62500,
+          isRecommended: true
         },
         {
-          id: 'quarterly',
-          label: 'before Dec 2025',
-          price: 62490,
-          period: '3 months',
-          commitment: '3 months',
-          savings: 74990,
-          isRecommended: true
+          id: 'standard',
+          label: 'After Dec 20, 2025',
+          price: 74990,
+          originalPrice: 124990,
+          discount: '40% OFF',
+          period: '6 months',
+          commitment: '6 months',
+          savings: 50000,
+          isRecommended: false
         }
       ],
       includes: [
@@ -244,9 +249,9 @@ export const ALL_COURSE_DATA = {
   // --- New Course 1: Rejuvenation ---
   'rejuvenation': {
     id: 'rejuvenation',
-    title: 'Cellular Rejuvenation Protocol',
-    subtitle: 'Biohack Your Sleep, Stress, and Longevity in 8 Weeks',
-    tagline: 'Deep-dive into hormonal balance and recovery for peak performance',
+    title: 'Stress Management',
+    subtitle: 'Rewires your stress',
+    tagline: 'The 6-Week Stress Reset is your path to a calmer body, a clearer mind, and a healthier, more balanced you — even in a demanding world.',
     heroImage: 'reju.svg',
 
     painPoints: [
@@ -332,8 +337,8 @@ export const ALL_COURSE_DATA = {
 
     pricing: {
       options: [
-        { id: 'full-pay', label: 'Full Pay', price: 48999, period: '45 Days', commitment: '45 Days', isRecommended: true, savings: 0 },
-       
+        { id: 'full-pay', label: 'Full Pay', price: 48999, period: '6 Weeks', commitment: '6 Weeks', isRecommended: true, savings: 0 },
+
       ],
       includes: [
         'Advanced HRV tracking techniques',
@@ -351,8 +356,8 @@ export const ALL_COURSE_DATA = {
   'move-better': {
     id: 'move-better',
     title: 'The Move Better System',
-    subtitle: 'Fix Posture, Eliminate Pain, and Build Functional Strength',
-    tagline: 'A 6-week program focused on mobility and structural integrity for lasting physical health',
+    subtitle: 'Posture relief',
+    tagline: 'Program designed for professionals who spend extended hours at their desks and are now paying the price through back pain, stiffness, poor posture, low energy, and rising stress',
     heroImage: 'movebetter.svg',
 
     painPoints: [
@@ -386,7 +391,7 @@ export const ALL_COURSE_DATA = {
     ],
     pricing: {
       options: [
-        { id: 'standard', label: 'Standard Access', price: 5999, period: '6 weeks', commitment: '6 weeks', isRecommended: true, savings: 0 },
+        { id: 'standard', label: 'Standard Access', price: 5999, period: '2 weeks', commitment: '2 weeks', isRecommended: true, savings: 0 },
       ],
       includes: [
         'Weekly video mobility follow-alongs',
@@ -402,8 +407,8 @@ export const ALL_COURSE_DATA = {
   'foundation-reset': {
     id: 'foundation-reset',
     title: 'Foundation Reset Program',
-    subtitle: 'The 4-Week Kickstart to Healthier Habits',
-    tagline: 'The perfect entry point for beginners to create consistent, lasting healthy habits',
+    subtitle: 'Multi dimensional fitness',
+    tagline: 'A complete amalgamation of fitness, nutrition, detox , awareness and habits building',
     heroImage: 'foundation.svg',
 
     painPoints: [
@@ -437,9 +442,39 @@ export const ALL_COURSE_DATA = {
     ],
     pricing: {
       options: [
-        { id: 'single-payment', label: 'Single Payment', price: 17490, period: '3 Months', commitment: '3 Months', isRecommended: true, savings: 0 },
-          { id: 'single-payment', label: 'Single Payment', price: 29990, period: '6 Months', commitment: '6 Months', isRecommended: true, savings: 0 },
-            { id: 'single-payment', label: 'Single Payment', price: 44990, period: '12 Months', commitment: '12 Months', isRecommended: true, savings: 0 }
+        {
+          id: '3-months',
+          label: '3 Months',
+          price: 14490,
+          originalPrice: 24990,
+          discount: '30% OFF',
+          period: '3 Months',
+          commitment: '3 Months',
+          isRecommended: false,
+          savings: 10500
+        },
+        {
+          id: '6-months',
+          label: '6 Months',
+          price: 29990,
+          originalPrice: 49990,
+          discount: '40% OFF',
+          period: '6 Months',
+          commitment: '6 Months',
+          isRecommended: true,
+          savings: 20000
+        },
+        {
+          id: '12-months',
+          label: '12 Months',
+          price: 44990,
+          originalPrice: 89990,
+          discount: '50% OFF',
+          period: '12 Months',
+          commitment: '12 Months',
+          isRecommended: false,
+          savings: 45000
+        }
       ],
       includes: [
         'Simple daily checklist',
