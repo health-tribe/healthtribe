@@ -18,10 +18,10 @@ export default function App() {
     // Navigation items
     const navItems = [
         { name: 'Contact Us', href: '/contact' },
-        { name: 'About Us', href: '/about' },
-        { name: 'Our programs', href: '/programs' },
-        { name: 'Articles', href: '/articles' },
-        { name: 'FAQs', href: '/faqs' },
+      
+        { name: 'Our programs', href: '/#programs' },
+        
+        { name: 'FAQs', href: '/#faq' },
     ];
 
     // Legal items
