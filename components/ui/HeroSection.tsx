@@ -218,8 +218,9 @@ const HeroSection: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-3 w-full justify-center">
+             <Link href="/#programs">
               <Button variant="primary" customColor={currentTab.color} className="flex-1 max-w-[140px]">Get Started</Button>
-              <Button variant="outline" size="lg" customColor={currentTab.color} className="flex-1 max-w-[140px]">Know More</Button>
+            </Link>
             </div>
 
             <div className="flex gap-2 mt-4">
