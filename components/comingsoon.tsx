@@ -31,7 +31,7 @@ export default function ComingSoon() {
         <div className="flex flex-1 flex-col items-center justify-center px-4 pt-12 text-center md:pt-20">
          
           <h1 className="max-w-4xl text-5xl font-extrabold leading-tight tracking-tight text-gray-900 md:text-7xl lg:text-8xl">
-            COMING SOON!!
+     Starting from January!!
           </h1>
 
           <p className="mt-6 max-w-lg text-lg text-gray-600 md:text-xl">
