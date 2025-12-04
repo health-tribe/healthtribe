@@ -265,9 +265,9 @@ const HeroSection: React.FC = () => {
               {currentTab.description}
             </p>
             <div className="flex gap-4">
-           <Link href="/#carousel" scroll={true}>  <Button variant="primary" customColor={currentTab.color}  // <--- Destructure this
+           <Link href="/#programs" scroll={true}>  <Button variant="primary" customColor={currentTab.color}  // <--- Destructure this
                 customTextColor={currentTab.color} size="lg" >Get Started</Button></Link>
-              <Button variant="outline" size="lg" customColor={currentTab.color}>Know More</Button>
+             
             </div>
           </div>
 
