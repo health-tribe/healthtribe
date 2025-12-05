@@ -14,7 +14,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://healthtribe.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://healthtribe.co.in'),
   title: "Health Tribe",
   description: "Health Tribe",
   icons: {
