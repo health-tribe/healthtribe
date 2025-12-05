@@ -3,7 +3,7 @@ import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
 import Image from "next/image";
-import Header from "@/components/header";
+import Header from "@/components/Header";
 
 import Footer from "@/components/footer";
 const dmSans = DM_Sans({
@@ -14,12 +14,29 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://healthtribe.com'),
   title: "Health Tribe",
   description: "Health Tribe",
   icons: {
     icon: "/assets/svgs/logo.svg",
   },
   keywords: ["Health", "Tribe", "Health Tribe"],
+  alternates: {
+    canonical: "./",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    url: process.env.NEXT_PUBLIC_BASE_URL || "https://healthtribe.com",
+    title: "Health Tribe",
+    description: "Health Tribe - Holistic Wellness Programs",
+    siteName: "Health Tribe",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Health Tribe",
+    description: "Health Tribe - Holistic Wellness Programs",
+  },
 };
 
 

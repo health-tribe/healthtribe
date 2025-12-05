@@ -1,18 +1,16 @@
 import React from 'react';
-import { 
-  PlayCircle, 
-  Users, 
-  Trophy, 
-  ArrowRight, 
-  Clock, 
-  Activity, 
+import {
+  PlayCircle,
+  Users,
+  Trophy,
+  ArrowRight,
+  Clock,
+  Activity,
   CheckCircle2,
   Smartphone
 } from 'lucide-react';
 
-// Simple mock for Next.js Link to make this preview runnable. 
-// In your project, revert this to: import Link from 'next/link';
-const Link = ({ href, children }: { href: string; children: React.ReactNode }) => <a href={href} className="contents">{children}</a>;
+import Link from 'next/link';
 
 const ProgramShowcase = () => {
   // Mock Data for Programs
@@ -38,7 +36,7 @@ const ProgramShowcase = () => {
       level: "Metabolic Reset",
       category: "Movement",
       badge: "Revive",
-     price: "",
+      price: "",
       url: "/programs/reboot"
     },
     {
@@ -51,9 +49,9 @@ const ProgramShowcase = () => {
       category: "Fitness",
       badge: "Repair",
       price: "",
-       url: "/programs/move-better"
+      url: "/programs/move-better"
     },
-     {
+    {
       id: 4,
       title: "Stress Management",
       tagline: "The 6-Week Stress Reset is your path to a calmer body, a clearer mind, and a healthier, more balanced you — even in a demanding world.",
@@ -62,18 +60,18 @@ const ProgramShowcase = () => {
       level: "Rewires your stress",
       category: "Fitness",
       badge: "Stress Management",
-       price: "",
-         url: "/programs/rejuvenation"
+      price: "",
+      url: "/programs/rejuvenation"
     }
   ];
 
   return (
     <div id="programs" className="font-sans text-stone-800">
-      
+
       {/* SECTION C: PROGRAM SHOWCASE */}
       <section className="py-20 bg-stone-50">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          
+
           {/* Section Header */}
           <div className="text-center mb-16 max-w-2xl mx-auto">
             <h2 className="text-sm font-bold tracking-widest text-emerald-600 uppercase mb-3">
@@ -92,15 +90,15 @@ const ProgramShowcase = () => {
           */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
             {programs.map((program) => (
-              <div 
-                key={program.id} 
+              <div
+                key={program.id}
                 className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-stone-100 flex flex-col h-full"
               >
                 {/* Card Image Area */}
                 <div className="relative h-64 overflow-hidden">
-                  <img 
-                    src={program.image} 
-                    alt={program.title} 
+                  <img
+                    src={program.image}
+                    alt={program.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   {/* Badge */}
@@ -117,7 +115,7 @@ const ProgramShowcase = () => {
 
                 {/* Card Content */}
                 <div className="p-6 flex flex-col flex-grow">
-                  
+
                   {/* Metadata */}
                   <div className="flex items-center gap-4 text-xs font-medium text-stone-500 mb-3">
                     <span className="flex items-center gap-1 bg-stone-100 px-2 py-1 rounded">
@@ -139,11 +137,11 @@ const ProgramShowcase = () => {
                   {/* Bottom Action Area */}
                   <div className="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between">
                     <span className="text-lg font-bold text-stone-900">{program.price}</span>
-                    <Link href={program.url}> 
+                    <Link href={program.url}>
                       <button className="flex items-center gap-2 text-sm font-bold text-emerald-600 group-hover:text-emerald-800 transition-colors">
                         Know More <ArrowRight size={16} />
                       </button>
-                    </Link> 
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -164,7 +162,7 @@ const ProgramShowcase = () => {
         </div>
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-          
+
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-serif font-bold text-stone-900 mb-4">
               How It Works
@@ -176,12 +174,12 @@ const ProgramShowcase = () => {
 
           {/* Timeline Container */}
           <div className="relative">
-            
+
             {/* Connecting Line (Desktop Only) */}
             <div className="hidden md:block absolute top-12 left-1/6 right-1/6 h-0.5 bg-gradient-to-r from-transparent via-emerald-200 to-transparent z-0"></div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-              
+
               {/* Step 1 */}
               <div className="relative z-10 flex flex-col items-center group">
                 <div className="w-24 h-24 rounded-full bg-white border-4 border-emerald-50 flex items-center justify-center shadow-lg mb-6 group-hover:border-emerald-200 group-hover:scale-110 transition-all duration-300">
@@ -226,20 +224,20 @@ const ProgramShowcase = () => {
 
             </div>
           </div>
-          
+
           {/* Trust Indicators / Micro-social proof */}
           <div className="mt-20 pt-10 border-t border-stone-100 flex flex-col md:flex-row items-center justify-center gap-8 text-stone-500 text-sm font-medium">
-             <div className="flex items-center gap-2">
-               <CheckCircle2 className="text-emerald-500 w-5 h-5" /> 100% Science-Backed
-             </div>
-             <div className="hidden md:block w-1 h-1 bg-stone-300 rounded-full"></div>
-             <div className="flex items-center gap-2">
-               <CheckCircle2 className="text-emerald-500 w-5 h-5" /> Lifetime Access
-             </div>
-             <div className="hidden md:block w-1 h-1 bg-stone-300 rounded-full"></div>
-             <div className="flex items-center gap-2">
-               <CheckCircle2 className="text-emerald-500 w-5 h-5" /> Expert Support
-             </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="text-emerald-500 w-5 h-5" /> 100% Science-Backed
+            </div>
+            <div className="hidden md:block w-1 h-1 bg-stone-300 rounded-full"></div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="text-emerald-500 w-5 h-5" /> Lifetime Access
+            </div>
+            <div className="hidden md:block w-1 h-1 bg-stone-300 rounded-full"></div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="text-emerald-500 w-5 h-5" /> Expert Support
+            </div>
           </div>
 
         </div>
