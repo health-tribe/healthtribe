@@ -5,7 +5,7 @@ import FAQ from "@/components/faq";
 import ComingSoon from "@/components/comingsoon";
 import Testimonials from "@/components/testimonials";
 import Design from "@/components/ui/Design";
-import { connectDB } from "@/lib/db/db";
+
 
 import ProgramShowcase from "@/components/ui/carousel";
 
@@ -18,7 +18,7 @@ export default function Home() {
     "/assets/card-5.jpg",
  
   ];
-  connectDB();
+
   return (
     <div className="m-0 p-0 ">
       
